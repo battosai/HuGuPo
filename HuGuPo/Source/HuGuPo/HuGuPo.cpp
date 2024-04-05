@@ -3,4 +3,7 @@
 #include "HuGuPo.h"
 #include "Modules/ModuleManager.h"
 
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, HuGuPo, "HuGuPo" );
+IMPLEMENT_PRIMARY_GAME_MODULE(
+    FDefaultGameModuleImpl, 
+    HuGuPo, 
+    "HuGuPo");

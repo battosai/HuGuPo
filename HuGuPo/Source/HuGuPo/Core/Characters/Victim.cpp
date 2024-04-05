@@ -7,13 +7,14 @@
 // Module-specific include
 #include "Victim.h"
 
-void AVictim::SetupPlayerInputComponent(UInputComponent* playerInputComponent)
+void AVictim::SetupPlayerInputComponent(UInputComponent* inputComponent)
 {
 	// Verify BP references are set
-	check(IMC_Default != nullptr);
-	check(IA_Walk != nullptr);
+	check(defaultIMC != nullptr);
+	check(walkIA != nullptr);
+	check(lookIA != nullptr);
 
-	Super::SetupPlayerInputComponent(playerInputComponent);
+	Super::SetupPlayerInputComponent(inputComponent);
 
 	// Add input mapping context
 	APlayerController* controller = Cast<APlayerController>(GetController());
@@ -21,30 +22,43 @@ void AVictim::SetupPlayerInputComponent(UInputComponent* playerInputComponent)
 	UEnhancedInputLocalPlayerSubsystem* eInputSystem = localPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 
 	eInputSystem->AddMappingContext(
-		IMC_Default, 
+		defaultIMC, 
 		0);
 
 	// Bind InputActions to delegates
-    UEnhancedInputComponent* eInput = Cast<UEnhancedInputComponent>(playerInputComponent);
+    UEnhancedInputComponent* eInput = Cast<UEnhancedInputComponent>(inputComponent);
 
 	eInput->BindAction(
-		IA_Walk, 
-		ETriggerEvent::Started, 
+		walkIA, 
+		ETriggerEvent::Triggered, 
 		this, 
 		&AVictim::Walk);
 
+	eInput->BindAction(
+		lookIA, 
+		ETriggerEvent::Triggered, 
+		this, 
+		&AVictim::Look);
 }
 
 void AVictim::Walk(const FInputActionValue& input)
 {
 	FVector2D value = input.Get<FVector2D>();
 
-	UE_LOG(
-		LogTemp,
-		Log,
-		TEXT("INPUT FOR WALK: (%f, %f)"),
-		value.X,
-		value.Y);
+	FVector forward = GetActorForwardVector() * value.X;
+	FVector right = GetActorRightVector() * value.Y;
+	FVector movement = forward + right;
 
-	return;
+	AddMovementInput(
+		movement,
+		5.0,
+		false);
+}
+
+void AVictim::Look(const FInputActionValue& input)
+{
+	FVector2D value = input.Get<FVector2D>();
+
+	AddControllerYawInput(value.X);
+	AddControllerPitchInput(-value.Y);
 }

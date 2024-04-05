@@ -36,15 +36,21 @@ class HUGUPO_API AVictim : public ACharacter
 		 * @brief Default InputMappingContext reference.
 		 */
 		UPROPERTY(EditDefaultsOnly)
-		UInputMappingContext* IMC_Default;
+		UInputMappingContext* defaultIMC;
 	
 		/**
 		 * @brief Walk InputAction reference.
 		 */
 		UPROPERTY(EditDefaultsOnly)
-		UInputAction* IA_Walk;
+		UInputAction* walkIA;
 
-		/*
+		/**
+		 * @brief Look InputAction reference.
+		 */
+		UPROPERTY(EditDefaultsOnly)
+		UInputAction* lookIA;
+
+		/**
 		 * @brief Setup input.
 		 */
 		virtual void SetupPlayerInputComponent(UInputComponent* playerInputComponent) override;
@@ -53,4 +59,9 @@ class HUGUPO_API AVictim : public ACharacter
 		 * @brief Walk InputAction delegate.
 		 */
 		void Walk(const FInputActionValue& input);
+
+		/**
+		 * @brief Look InputAction delegate.
+		 */
+		void Look(const FInputActionValue& input);
 };

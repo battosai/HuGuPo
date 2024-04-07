@@ -1,3 +1,7 @@
+/**
+ * @brief HuGuPo primary game mode.
+ */
+
 #pragma once
 
 // Standard library includes
@@ -11,9 +15,6 @@
 // Generated include
 #include "HGPGameModeBase.generated.h"
 
-/**
- * @brief Primary game mode for HuGuPo.
- */
 UCLASS(Abstract)
 class HUGUPO_API AHGPGameModeBase : public AGameModeBase
 {

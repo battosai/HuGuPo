@@ -8,6 +8,8 @@ public class HuGuPo : ModuleRules
 	public HuGuPo(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+
+		PublicIncludePaths.Add(ModuleDirectory);
 	
 		PublicDependencyModuleNames.AddRange(new string[] 
 		{ 
@@ -15,7 +17,10 @@ public class HuGuPo : ModuleRules
 			"CoreUObject", 
 			"Engine",
             "EnhancedInput",
-            "InputCore"
+            "InputCore",
+			"Slate",
+			"SlateCore",
+			"UMG"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {});

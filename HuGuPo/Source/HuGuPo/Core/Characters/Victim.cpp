@@ -2,6 +2,9 @@
  * @brief Main player character.
  */
 
+// Module-specific include
+#include "Victim.h"
+
 // Standard library includes
 
 // Unreal includes
@@ -9,9 +12,6 @@
 
 // HGP includes
 #include <Core/Interactables/Interactable.h>
-
-// Module-specific include
-#include "Victim.h"
 
 // -----------------------------------------------------------------------------
 void AVictim::BeginPlay()

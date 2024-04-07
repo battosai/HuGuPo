@@ -2,14 +2,22 @@
  * @brief Interactable door.
  */
 
+// Module-specific include
+#include "Door.h"
+
 // Standard library includes
 
 // Unreal includes
 
 // HGP includes
 
-// Module-specific include
-#include "Door.h"
+// -----------------------------------------------------------------------------
+void UDoor::BeginPlay()
+{
+    Super::BeginPlay();
+
+    state = static_cast<State>(startState);
+}
 
 // -----------------------------------------------------------------------------
 void UDoor::Interact()
@@ -17,25 +25,16 @@ void UDoor::Interact()
     switch (state)
     {
         case State::LOCKED:
-            UE_LOG(
-                LogTemp,
-                Log,
-                TEXT("INTERACTABLE DOOR: I'm locked!"));
-
             return;
-            break;
 
         case State::CLOSED:
             state = State::OPENED;
+            GetOwner()->SetActorRelativeRotation(openRotation);
             break;
 
         case State::OPENED:
             state = State::CLOSED;
+            GetOwner()->SetActorRelativeRotation(closedRotation);
             break;
     }
-
-    UE_LOG(
-        LogTemp,
-        Log,
-        TEXT("INTERACTING WITH DOOR INTERACTABLE"));
 }

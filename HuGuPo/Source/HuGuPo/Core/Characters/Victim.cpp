@@ -51,7 +51,7 @@ void AVictim::Walk(const FInputActionValue& input)
 
 	AddMovementInput(
 		movement,
-		5.0,
+		1.0,
 		false);
 }
 

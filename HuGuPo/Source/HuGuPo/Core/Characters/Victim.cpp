@@ -30,6 +30,8 @@ void AVictim::SetupPlayerInputComponent(UInputComponent* inputComponent)
 	check(defaultIMC != nullptr);
 	check(walkIA != nullptr);
 	check(lookIA != nullptr);
+	check(instantInteractIA != nullptr);
+	check(prolongedInteractIA != nullptr);
 
 	Super::SetupPlayerInputComponent(inputComponent);
 
@@ -63,10 +65,16 @@ void AVictim::SetupPlayerInputComponent(UInputComponent* inputComponent)
 		&AVictim::Look);
 
 	eInput->BindAction(
-		interactIA, 
-		ETriggerEvent::Started, 
+		instantInteractIA, 
+		ETriggerEvent::Triggered, 
 		this, 
-		&AVictim::Interact);
+		&AVictim::InstantInteract);
+
+	eInput->BindAction(
+		prolongedInteractIA,
+		ETriggerEvent::Triggered,
+		this,
+		&AVictim::ProlongedInteract);
 }
 
 // -----------------------------------------------------------------------------
@@ -94,7 +102,7 @@ void AVictim::Look(const FInputActionValue& input)
 }
 
 // -----------------------------------------------------------------------------
-void AVictim::Interact(const FInputActionValue& input)
+void AVictim::InstantInteract(const FInputActionValue& input)
 {
 	FHitResult hitInfo;
 
@@ -139,6 +147,12 @@ void AVictim::Interact(const FInputActionValue& input)
 		ii++)
 	{
 		IInteractable* interactable = Cast<IInteractable>(components[ii]);
-		interactable->Interact();
+		interactable->InstantInteract();
 	}
+}
+
+// -----------------------------------------------------------------------------
+void AVictim::ProlongedInteract(const FInputActionValue& input)
+{
+	return;
 }

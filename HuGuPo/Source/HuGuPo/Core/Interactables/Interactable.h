@@ -31,9 +31,18 @@ class IInteractable
 
         /**
          * @brief What happens when the player interacts with this object.
+         * Interaction that starts and ends immediately. Single interaction.
          * Set as pure virtual so that it has to be inherited to be implemented.
          */
-        virtual void Interact() = 0;
+        virtual void InstantInteract() = 0;
+
+        /**
+         * @brief What happens when the player interacts with this object.
+         * Interaction that starts and continues for as long as the player is
+         * still interacting. 
+         * Set as pure virtual so that it has to be inherited to be implemented.
+         */
+        virtual void ProlongedInteract() = 0;
 
     protected:
 

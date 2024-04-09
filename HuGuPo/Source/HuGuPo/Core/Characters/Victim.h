@@ -54,10 +54,16 @@ class HUGUPO_API AVictim : public ACharacter
 		UInputAction* lookIA;
 
 		/**
-		 * @brief Interact InputAction reference.
+		 * @brief Instant Interact InputAction reference.
 		 */
 		UPROPERTY(EditDefaultsOnly, Category="Input")
-		UInputAction* interactIA;
+		UInputAction* instantInteractIA;
+
+		/**
+		 * @brief Prolonged Interact InputAction reference.
+		 */
+		UPROPERTY(EditDefaultsOnly, Category="Input")
+		UInputAction* prolongedInteractIA;
 
 		/**
 		 * @brief Reference to this character's PlayerController.
@@ -90,7 +96,12 @@ class HUGUPO_API AVictim : public ACharacter
 		void Look(const FInputActionValue& input);
 
 		/**
-		 * @brief Interact InputAction delegate.
+		 * @brief Instant Interact InputAction delegate.
 		 */
-		void Interact(const FInputActionValue& input);
+		void InstantInteract(const FInputActionValue& input);
+
+		/**
+		 * @brief Prolonged Interact InputAction delegate.
+		 */
+		void ProlongedInteract(const FInputActionValue& input);
 };

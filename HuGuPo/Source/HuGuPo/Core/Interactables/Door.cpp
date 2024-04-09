@@ -20,7 +20,7 @@ void UDoor::BeginPlay()
 }
 
 // -----------------------------------------------------------------------------
-void UDoor::Interact()
+void UDoor::InstantInteract()
 {
     switch (state)
     {

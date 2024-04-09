@@ -39,17 +39,19 @@ class HUGUPO_API UDoor : public UActorComponent, public IInteractable
          * @brief Starting State of door.
          * Clamped to the integer range of State enum.
          */
-        UPROPERTY(
-            EditInstanceOnly, 
-            meta=(
-                ClampMin = "0", 
-                ClampMax = "2"))
+        UPROPERTY(EditInstanceOnly, meta=(ClampMin = "0", ClampMax = "2"))
         int startState;
 
         /**
          * @brief What happens when the player interacts with this object.
          */
-        virtual void Interact() override;
+        virtual void InstantInteract() override;
+
+        /**
+         * @brief Interaction that occurs while player is still interacting with
+         * this object.
+         */
+        virtual void ProlongedInteract() override { return; }
 
     protected:
 

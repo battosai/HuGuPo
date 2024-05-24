@@ -159,6 +159,14 @@ void AVictim::ProlongedInteract(const FInputActionValue& input)
 		return;
 	}
 
+	// Interact if we already have an interactable
+	if (focusedInteractable != nullptr)
+	{
+		focusedInteractable->ProlongedInteract();
+		return;
+	}
+
+	// Find an interactable
 	focusedInteractable = GetInteractable();
 
 	if (focusedInteractable == nullptr)
@@ -178,6 +186,11 @@ void AVictim::ProlongedInteract(const FInputActionValue& input)
 // -----------------------------------------------------------------------------
 void AVictim::EndInteraction(const FInputActionValue& input)
 {
+	if (focusedInteractable != nullptr)
+	{
+		focusedInteractable->EndInteraction();
+	}
+
 	bIgnoreInteractables = false;
 	focusedInteractable = nullptr;
 }

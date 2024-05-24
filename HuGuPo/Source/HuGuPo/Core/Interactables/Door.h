@@ -28,32 +28,33 @@ class HUGUPO_API ADoor : public AActor, public IInteractable
     public:
 
         /**
-         * @brief State of door.
+         * @brief Orientation of door to player.
          */
-        enum State 
+        enum EOrientation 
         {
-            CLOSED = 0,
-            OPENED = 1,
-            LOCKED = 2
+            Undetermined = 0,
+            PushToOpen = 1,
+            PushToClose = 2
         };
 
         /**
-         * @brief Starting State of door.
-         * Clamped to the integer range of State enum.
-         */
-        UPROPERTY(EditDefaultsOnly, meta=(ClampMin = "0", ClampMax = "2"))
-        int startState;
-
-        /**
          * @brief What happens when the player interacts with this object.
+         * Do nothing.
          */
         virtual void InstantInteract() override;
 
         /**
          * @brief Interaction that occurs while player is still interacting with
-         * this object.
+         * this object. Implements a peeking door mechanic based on player mouse
+         * movement.
          */
         virtual void ProlongedInteract() override;
+
+        /**
+         * @brief What happens when the player interaction ends.
+         * Clears the orientation of the door to player.
+         */
+        virtual void EndInteraction() override;
 
     protected:
 
@@ -70,11 +71,6 @@ class HUGUPO_API ADoor : public AActor, public IInteractable
         const FQuat openRotation = FQuat::MakeFromEuler(FVector(0, 0, -90));
 
         /**
-         * @brief Current state of this door.
-         */
-        State state;
-
-        /**
          * @brief Reference to the static mesh of the door.
          */
         UStaticMeshComponent* doorMesh;
@@ -83,6 +79,11 @@ class HUGUPO_API ADoor : public AActor, public IInteractable
          * @brief Reference to victim character.
          */
         AVictim* victim;
+
+        /**
+         * @brief Orientation of door to player at start of interaction.
+         */
+        EOrientation orientation;
 
         /**
 		 * @brief Called when play begins for this component.

@@ -44,6 +44,12 @@ class IInteractable
          */
         virtual void ProlongedInteract() = 0;
 
+        /**
+         * @brief What happens when the player interaction ends.
+         * Can be used for interaction cleanup or delayed effects.
+         */
+        virtual void EndInteraction() = 0;
+
     protected:
 
     private:

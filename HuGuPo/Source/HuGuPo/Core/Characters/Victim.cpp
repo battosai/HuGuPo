@@ -21,6 +21,9 @@ void AVictim::BeginPlay()
 	cam = FindComponentByClass<UCameraComponent>();
 
 	check(cam != nullptr);
+
+	bIgnoreInteractables = false;
+	focusedInteractable = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -75,6 +78,23 @@ void AVictim::SetupPlayerInputComponent(UInputComponent* inputComponent)
 		ETriggerEvent::Triggered,
 		this,
 		&AVictim::ProlongedInteract);
+
+	eInput->BindAction(
+		prolongedInteractIA,
+		ETriggerEvent::Completed,
+		this,
+		&AVictim::EndInteraction);
+}
+
+// -----------------------------------------------------------------------------
+void AVictim::Tick(float deltaSeconds)
+{
+	Super::Tick(deltaSeconds);
+
+	if (focusedInteractable != nullptr)
+	{
+		focusedInteractable->ProlongedInteract();
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -97,6 +117,18 @@ void AVictim::Look(const FInputActionValue& input)
 {
 	FVector2D value = input.Get<FVector2D>();
 
+	// If we are interacting with something, store the input
+	// otherwise set the input storage to (0, 0)
+	if (focusedInteractable != nullptr)
+	{
+		mouseMovementInput = value;
+		return;
+	}
+	else
+	{
+		mouseMovementInput = FVector2D::ZeroVector;
+	}
+
 	AddControllerYawInput(value.X);
 	AddControllerPitchInput(-value.Y);
 }
@@ -104,55 +136,73 @@ void AVictim::Look(const FInputActionValue& input)
 // -----------------------------------------------------------------------------
 void AVictim::InstantInteract(const FInputActionValue& input)
 {
-	FHitResult hitInfo;
-
-	FVector start = cam->GetComponentLocation();
-	FVector end = start + cam->GetForwardVector() * 300.0;
-
-	bool hit = GetWorld()->LineTraceSingleByChannel(
-		hitInfo,
-		start,
-		end,
-		InteractTraceChannel);
-
-	if (hit == false)
+	if (bIgnoreInteractables == true)
 	{
 		return;
 	}
 
-	// Get ActorComponents that implement IInteractable
-	AActor* actor = hitInfo.HitObjectHandle.FetchActor();
-	auto components = actor->GetComponentsByInterface(UInteractable::StaticClass());
+	IInteractable* interactable = GetInteractable();
 
-	if (components.Num() == 0)
+	if (interactable == nullptr)
 	{
-		UE_LOG(
-			LogTemp,
-			Log,
-			TEXT("%s IS NOT INTERACTABLE"),
-			*(actor->GetActorLabel()));
-
 		return;
 	}
 
-	UE_LOG(
-		LogTemp,
-		Log,
-		TEXT("INTERACTING WITH %s"),
-		*(actor->GetActorLabel()));
-
-	// Do the interactions
-	for (int ii = 0;
-		ii < components.Num();
-		ii++)
-	{
-		IInteractable* interactable = Cast<IInteractable>(components[ii]);
-		interactable->InstantInteract();
-	}
+	interactable->InstantInteract();
 }
 
 // -----------------------------------------------------------------------------
 void AVictim::ProlongedInteract(const FInputActionValue& input)
 {
-	return;
+	if (bIgnoreInteractables == true)
+	{
+		return;
+	}
+
+	focusedInteractable = GetInteractable();
+
+	if (focusedInteractable == nullptr)
+	{
+		UE_LOG(
+			LogTemp,
+			Log,
+			TEXT("No interactable"));
+
+		bIgnoreInteractables = true;
+		return;
+	}
+
+	focusedInteractable->ProlongedInteract();
+}
+
+// -----------------------------------------------------------------------------
+void AVictim::EndInteraction(const FInputActionValue& input)
+{
+	bIgnoreInteractables = false;
+	focusedInteractable = nullptr;
+}
+
+// -----------------------------------------------------------------------------
+IInteractable* AVictim::GetInteractable()
+{
+	FHitResult hitInfo;
+
+	FVector start = cam->GetComponentLocation();
+	FVector end = start + cam->GetForwardVector() * 300.0;
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		hitInfo,
+		start,
+		end,
+		InteractTraceChannel);
+
+	if (bHit == false)
+	{
+		return nullptr;
+	}
+
+	// Return IInteractable casted actor
+	AActor* actor = hitInfo.HitObjectHandle.FetchActor();
+	IInteractable* interactable = Cast<IInteractable>(actor);
+	return interactable;
 }

@@ -17,6 +17,7 @@
 #include "InputTriggers.h"
 
 // HGP includes
+#include <Core/Interactables/Interactable.h>
 
 // Generated include
 #include "Victim.generated.h"
@@ -31,9 +32,27 @@ class HUGUPO_API AVictim : public ACharacter
 
 	public:
 
+		/**
+		 * @brief Get mouse movement input.
+		 */
+		const FVector2D& GetMouseMovement()
+		{
+			return mouseMovementInput;
+		}
+
 	protected:
 
 	private:
+
+		/**
+		 * @brief Whether or not the player should ignore interactables.
+		 */
+		bool bIgnoreInteractables;
+
+		/**
+		 * @brief Reference to an interactable that the player is focused on.
+		 */
+		IInteractable* focusedInteractable;
 
 		/**
 		 * @brief Default InputMappingContext reference.
@@ -76,6 +95,12 @@ class HUGUPO_API AVictim : public ACharacter
 		UCameraComponent* cam;
 
 		/**
+		 * @brief Current input for mouse movement.
+		 * Only updated when Look InputAction is not consuming it.
+		 */
+		FVector2D mouseMovementInput;
+
+		/**
 		 * @brief Called when play begins for this actor.
 		 */
 		virtual void BeginPlay() override;
@@ -84,6 +109,11 @@ class HUGUPO_API AVictim : public ACharacter
 		 * @brief Setup input.
 		 */
 		virtual void SetupPlayerInputComponent(UInputComponent* playerInputComponent) override;
+
+		/**
+		 * @brief Update loop.
+		 */
+		virtual void Tick(float deltaSeconds) override;
 
 		/**
 		 * @brief Walk InputAction delegate.
@@ -104,4 +134,14 @@ class HUGUPO_API AVictim : public ACharacter
 		 * @brief Prolonged Interact InputAction delegate.
 		 */
 		void ProlongedInteract(const FInputActionValue& input);
+
+		/**
+		 * Interact InputActions ending delegate.
+		 */
+		void EndInteraction(const FInputActionValue& input);
+
+		/**
+		 * @brief Line trace to find an Interactable component on an object.
+		 */
+		IInteractable* GetInteractable();
 };

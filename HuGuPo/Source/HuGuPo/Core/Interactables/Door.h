@@ -7,17 +7,19 @@
 // Standard library includes
 
 // Unreal includes
-#include "Components/ActorComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
 
 // HGP includes
+#include <Core/Characters/Victim.h>
 #include <Core/Interactables/Interactable.h>
 
 // Generated include
 #include "Door.generated.h"
 
-UCLASS(meta=(BlueprintSpawnableComponent))
-class HUGUPO_API UDoor : public UActorComponent, public IInteractable
+UCLASS(Abstract)
+class HUGUPO_API ADoor : public AActor, public IInteractable
 {
     GENERATED_BODY()
 
@@ -39,7 +41,7 @@ class HUGUPO_API UDoor : public UActorComponent, public IInteractable
          * @brief Starting State of door.
          * Clamped to the integer range of State enum.
          */
-        UPROPERTY(EditInstanceOnly, meta=(ClampMin = "0", ClampMax = "2"))
+        UPROPERTY(EditDefaultsOnly, meta=(ClampMin = "0", ClampMax = "2"))
         int startState;
 
         /**
@@ -51,7 +53,7 @@ class HUGUPO_API UDoor : public UActorComponent, public IInteractable
          * @brief Interaction that occurs while player is still interacting with
          * this object.
          */
-        virtual void ProlongedInteract() override { return; }
+        virtual void ProlongedInteract() override;
 
     protected:
 
@@ -60,17 +62,27 @@ class HUGUPO_API UDoor : public UActorComponent, public IInteractable
         /**
          * @brief Quaternion for closed state.
          */
-        FQuat closedRotation = FQuat::MakeFromEuler(FVector(0, 0, 180));
+        const FQuat closedRotation = FQuat::MakeFromEuler(FVector(0, 0, 0));
 
         /**
          * @brief Quaternion for open state.
          */
-        FQuat openRotation = FQuat::MakeFromEuler(FVector(0, 0, 90));
+        const FQuat openRotation = FQuat::MakeFromEuler(FVector(0, 0, -90));
 
         /**
          * @brief Current state of this door.
          */
         State state;
+
+        /**
+         * @brief Reference to the static mesh of the door.
+         */
+        UStaticMeshComponent* doorMesh;
+
+        /**
+         * @brief Reference to victim character.
+         */
+        AVictim* victim;
 
         /**
 		 * @brief Called when play begins for this component.

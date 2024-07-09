@@ -84,6 +84,12 @@ void AVictim::SetupPlayerInputComponent(UInputComponent* inputComponent)
 		ETriggerEvent::Completed,
 		this,
 		&AVictim::EndInteraction);
+
+	eInput->BindAction(
+		useIA,
+		ETriggerEvent::Triggered,
+		this,
+		&AVictim::Use);
 }
 
 // -----------------------------------------------------------------------------
@@ -122,7 +128,11 @@ void AVictim::Look(const FInputActionValue& input)
 	if (focusedInteractable != nullptr)
 	{
 		mouseMovementInput = value;
-		return;
+
+		if (focusedInteractable->bOverrideLook == true)
+		{
+			return;
+		}
 	}
 	else
 	{
@@ -146,6 +156,13 @@ void AVictim::InstantInteract(const FInputActionValue& input)
 	if (interactable == nullptr)
 	{
 		return;
+	}
+
+	// Hold interactable if it's a pickup
+	APickup* pickup = dynamic_cast<APickup*>(interactable);
+	if (pickup != nullptr)
+	{
+		item = pickup;
 	}
 
 	interactable->InstantInteract();
@@ -193,6 +210,17 @@ void AVictim::EndInteraction(const FInputActionValue& input)
 
 	bIgnoreInteractables = false;
 	focusedInteractable = nullptr;
+}
+
+// -----------------------------------------------------------------------------
+void AVictim::Use(const FInputActionValue& input)
+{
+	if (item == nullptr)
+	{
+		return;
+	}
+
+	item->Use();
 }
 
 // -----------------------------------------------------------------------------

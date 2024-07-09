@@ -25,14 +25,12 @@ void ADoor::BeginPlay()
         GetWorld(),
         0));
 
+    bOverrideLook = false;
     orientation = EOrientation::Undetermined;
 }
 
 // -----------------------------------------------------------------------------
-void ADoor::InstantInteract()
-{
-
-}
+void ADoor::InstantInteract() {}
 
 // -----------------------------------------------------------------------------
 void ADoor::ProlongedInteract()

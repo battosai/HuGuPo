@@ -30,6 +30,12 @@ class IInteractable
     public:
 
         /**
+         * @brief Whether or not this interactable 
+         * should prevent the Look input.
+         */
+        bool bOverrideLook;
+
+        /**
          * @brief What happens when the player interacts with this object.
          * Interaction that starts and ends immediately. Single interaction.
          * Set as pure virtual so that it has to be inherited to be implemented.

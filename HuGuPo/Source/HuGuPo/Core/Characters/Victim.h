@@ -18,6 +18,7 @@
 
 // HGP includes
 #include <Core/Interactables/Interactable.h>
+#include <Core/Interactables/Pickup.h>
 
 // Generated include
 #include "Victim.generated.h"
@@ -85,6 +86,12 @@ class HUGUPO_API AVictim : public ACharacter
 		UInputAction* prolongedInteractIA;
 
 		/**
+		 * @brief Use InputAction reference.
+		 */
+		UPROPERTY(EditDefaultsOnly, Category="Input")
+		UInputAction* useIA;
+
+		/**
 		 * @brief Reference to this character's PlayerController.
 		 */
 		APlayerController* controller;
@@ -99,6 +106,15 @@ class HUGUPO_API AVictim : public ACharacter
 		 * Only updated when Look InputAction is not consuming it.
 		 */
 		FVector2D mouseMovementInput;
+
+		/**
+		 * @brief Item held in hand.
+		 */
+		APickup* item;
+
+		// -------------------------------------------------------------------------
+		// Unreal Behaviour
+		// -------------------------------------------------------------------------
 
 		/**
 		 * @brief Called when play begins for this actor.
@@ -136,9 +152,14 @@ class HUGUPO_API AVictim : public ACharacter
 		void ProlongedInteract(const FInputActionValue& input);
 
 		/**
-		 * Interact InputActions ending delegate.
+		 * @brief Interact InputActions ending delegate.
 		 */
 		void EndInteraction(const FInputActionValue& input);
+
+		/**
+		 * @brief Use InputAction delegate.
+		 */
+		void Use(const FInputActionValue& input);
 
 		/**
 		 * @brief Line trace to find an Interactable component on an object.

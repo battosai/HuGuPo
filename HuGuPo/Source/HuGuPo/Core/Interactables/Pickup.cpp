@@ -62,16 +62,25 @@ void APickup::InstantInteract()
 
     AttachToActor(
         victim,
-        FAttachmentTransformRules::SnapToTargetIncludingScale);
+        FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 
     // TODO:
-    // Offset is specific to the lamp,
-    // will need to generalize this
-    AddActorLocalOffset(
+    // Local transform is specific to lamp,
+    // need to generalize these
+    SetActorRelativeLocation(
         FVector(
             40, 
-            25, 
-            40),
+            50, 
+            15),
+        false,
+        nullptr,
+        ETeleportType::None);
+
+    SetActorRelativeRotation(
+        FQuat::MakeFromEuler(FVector(
+            0,
+            -20,
+            0)),
         false,
         nullptr,
         ETeleportType::None);

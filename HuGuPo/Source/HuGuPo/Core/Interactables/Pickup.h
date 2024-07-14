@@ -80,7 +80,22 @@ class HUGUPO_API APickup : public AActor, public IInteractable
         UStaticMeshComponent* mesh;
 
         /**
+         * @brief Constructor to set default values.
+         */
+        APickup();
+
+        /**
          * @brief Called when play begins for this component.
          */
         virtual void BeginPlay() override;
+
+        /**
+         * Every frame update loop.
+         */
+        virtual void Tick(float delta_s) override;
+
+        /**
+         * @brief Throw the pickup item.
+         */
+        void Throw();
 };

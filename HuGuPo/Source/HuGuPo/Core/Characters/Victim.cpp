@@ -221,6 +221,7 @@ void AVictim::Use(const FInputActionValue& input)
 	}
 
 	item->Use();
+	item = nullptr;
 }
 
 // -----------------------------------------------------------------------------

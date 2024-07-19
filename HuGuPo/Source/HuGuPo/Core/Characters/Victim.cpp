@@ -19,8 +19,10 @@ void AVictim::BeginPlay()
 	Super::BeginPlay();
 
 	cam = FindComponentByClass<UCameraComponent>();
+	mesh = GetMesh();
 
 	check(cam != nullptr);
+	check(mesh != nullptr);
 
 	bIgnoreInteractables = false;
 	focusedInteractable = nullptr;
@@ -33,6 +35,7 @@ void AVictim::SetupPlayerInputComponent(UInputComponent* inputComponent)
 	check(defaultIMC != nullptr);
 	check(walkIA != nullptr);
 	check(lookIA != nullptr);
+	check(jumpIA != nullptr);
 	check(instantInteractIA != nullptr);
 	check(prolongedInteractIA != nullptr);
 
@@ -66,6 +69,12 @@ void AVictim::SetupPlayerInputComponent(UInputComponent* inputComponent)
 		ETriggerEvent::Triggered, 
 		this, 
 		&AVictim::Look);
+
+	eInput->BindAction(
+		jumpIA,
+		ETriggerEvent::Started,
+		this,
+		&AVictim::AttemptJump);
 
 	eInput->BindAction(
 		instantInteractIA, 
@@ -141,6 +150,17 @@ void AVictim::Look(const FInputActionValue& input)
 
 	AddControllerYawInput(value.X);
 	AddControllerPitchInput(-value.Y);
+}
+
+// -----------------------------------------------------------------------------
+void AVictim::AttemptJump(const FInputActionValue& input)
+{
+	if (CanJump() == false)
+	{
+		return;
+	}
+
+	this->Jump();
 }
 
 // -----------------------------------------------------------------------------

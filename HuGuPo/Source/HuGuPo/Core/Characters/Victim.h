@@ -12,6 +12,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
 #include "InputTriggers.h"
@@ -74,6 +75,12 @@ class HUGUPO_API AVictim : public ACharacter
 		UInputAction* lookIA;
 
 		/**
+		 * @brief Jump InputAction reference.
+		 */
+		UPROPERTY(EditDefaultsOnly, Category="Input")
+		UInputAction* jumpIA;
+
+		/**
 		 * @brief Instant Interact InputAction reference.
 		 */
 		UPROPERTY(EditDefaultsOnly, Category="Input")
@@ -100,6 +107,11 @@ class HUGUPO_API AVictim : public ACharacter
 		 * @brief Reference to this character's CameraComponent.
 		 */
 		UCameraComponent* cam;
+
+		/**
+		 * @brief Reference to this character's mesh component.
+		 */
+		UMeshComponent* mesh;
 
 		/**
 		 * @brief Current input for mouse movement.
@@ -140,6 +152,11 @@ class HUGUPO_API AVictim : public ACharacter
 		 * @brief Look InputAction delegate.
 		 */
 		void Look(const FInputActionValue& input);
+
+		/**
+		 * @brief Jump InputAction delegate.
+		 */
+		void AttemptJump(const FInputActionValue& input);
 
 		/**
 		 * @brief Instant Interact InputAction delegate.

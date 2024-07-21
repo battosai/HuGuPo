@@ -61,14 +61,11 @@ class HUGUPO_API ADoor : public AActor, public IInteractable
     private:
 
         /**
-         * @brief Quaternion for closed state.
+         * Whether or not the door mesh is flipped so we have to account for the
+         * open/close orientation differently.
          */
-        const FQuat closedRotation = FQuat::MakeFromEuler(FVector(0, 0, 0));
-
-        /**
-         * @brief Quaternion for open state.
-         */
-        const FQuat openRotation = FQuat::MakeFromEuler(FVector(0, 0, -90));
+		UPROPERTY(EditDefaultsOnly)
+        bool bFlippedDoor;
 
         /**
          * @brief Reference to the static mesh of the door.

@@ -25,7 +25,7 @@ void ADoor::BeginPlay()
         GetWorld(),
         0));
 
-    bOverrideLook = false;
+    bOverrideLook = true;
     orientation = EOrientation::Undetermined;
 }
 
@@ -38,9 +38,13 @@ void ADoor::ProlongedInteract()
     // Cache starting orientation
     if (orientation == EOrientation::Undetermined)
     {
+        int flipFactor = bFlippedDoor ?
+            -1 :
+            1;
+
         float dot = FVector::DotProduct(
             victim->GetActorForwardVector(),
-            -(doorMesh->GetRightVector()));
+            -flipFactor * (doorMesh->GetRightVector()));
 
         orientation = (dot >= 0.0) ?
             EOrientation::PushToOpen :

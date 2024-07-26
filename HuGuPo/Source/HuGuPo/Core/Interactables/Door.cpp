@@ -19,7 +19,7 @@ void ADoor::BeginPlay()
     Super::BeginPlay();
 
     doorMesh = Cast<UStaticMeshComponent>(
-        GetDefaultSubobjectByName(TEXT("DoorStaticMesh")));
+        GetDefaultSubobjectByName(TEXT("SM_Door")));
 
     victim = Cast<AVictim>(UGameplayStatics::GetPlayerCharacter(
         GetWorld(),

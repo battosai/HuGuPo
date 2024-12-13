@@ -18,8 +18,10 @@ void AHidingSpot::BeginPlay()
 {
     Super::BeginPlay();
 
-    spot = Cast<USceneComponent>(GetDefaultSubobjectByName(TEXT("Spot")));
-    check(spot != nullptr);
+    hideSpot = Cast<USceneComponent>(GetDefaultSubobjectByName(TEXT("HideSpot")));
+    exitSpot = Cast<USceneComponent>(GetDefaultSubobjectByName(TEXT("ExitSpot")));
+    check(hideSpot != nullptr);
+    check(exitSpot != nullptr);
 }
 
 // -----------------------------------------------------------------------------
@@ -30,7 +32,17 @@ void AHidingSpot::InstantInteract()
         return;
     }
 
-    // Leave spot
+    // Leave hiding spot
+    AVictim* victim = Cast<AVictim>(UGameplayStatics::GetPlayerCharacter(
+        GetWorld(),
+        0));
+
+    victim->SetActorLocation(
+        exitSpot->GetComponentLocation(), // will probably need to add offset for char height
+        false,
+        nullptr,
+        ETeleportType::None);
+
     bOccupied = false;
 }
 
@@ -38,8 +50,7 @@ void AHidingSpot::InstantInteract()
 void AHidingSpot::ProlongedInteract()
 {
     if (bDisabled == true ||
-        bOccupied == true ||
-        spot == nullptr)
+        bOccupied == true)
     {
         return;
     }
@@ -54,7 +65,7 @@ void AHidingSpot::ProlongedInteract()
 
     const float hideTime_s = 1.0;
 
-    // Enter spot
+    // Enter hiding spot
     if (time_s - interactionStart_s >= hideTime_s)
     {
         AVictim* victim = Cast<AVictim>(UGameplayStatics::GetPlayerCharacter(
@@ -62,13 +73,13 @@ void AHidingSpot::ProlongedInteract()
             0));
 
         victim->SetActorLocation(
-            spot->GetComponentLocation(),
+            hideSpot->GetComponentLocation(),
             false,
             nullptr,
             ETeleportType::None);
 
         victim->SetActorRotation(
-            spot->GetComponentRotation(),
+            hideSpot->GetComponentRotation(),
             ETeleportType::None);
 
         bOccupied = true;

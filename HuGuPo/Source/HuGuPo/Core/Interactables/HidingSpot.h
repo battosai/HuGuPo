@@ -62,9 +62,14 @@ class HUGUPO_API AHidingSpot : public AActor, public IInteractable
         float interactionStart_s;
 
         /**
-         * @brief Component with the transform of the hiding spot itself.
+         * @brief Component with the transform of where the player hides.
          */
-        USceneComponent* spot;
+        USceneComponent* hideSpot;
+
+        /**
+         * @brief Component with the transform of where the player exits to.
+         */
+        USceneComponent* exitSpot;
 
         /**
          * Called when play begins for this component.

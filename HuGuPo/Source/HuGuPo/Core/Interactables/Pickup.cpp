@@ -25,7 +25,8 @@ void APickup::BeginPlay()
     Super::BeginPlay();
 
     mesh = Cast<UStaticMeshComponent>(
-        GetDefaultSubobjectByName(TEXT("StaticMesh")));
+        GetDefaultSubobjectByName(TEXT("SM_Object")));
+    check(mesh != nullptr);
 
     SetActorTickEnabled(false);
 
